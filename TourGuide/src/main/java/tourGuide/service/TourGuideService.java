@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -26,6 +27,7 @@ import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.LocationDTO;
 import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.service.api.ApiRequestService;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
@@ -40,6 +42,9 @@ public class TourGuideService {
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
+
+	@Autowired
+	private ApiRequestService apiRequestService;
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
@@ -89,6 +94,7 @@ public class TourGuideService {
 	}
 
 	public VisitedLocation trackUserLocation(User user) {
+		// Ajout Service
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
 		rewardsService.calculateRewards(user);
@@ -97,7 +103,7 @@ public class TourGuideService {
 
 	public List<AttractionDTO> getNearByAttractions(User user) {
 		VisitedLocation visitedLocation = getUserLocation(user);
-		List<Attraction> allAttractions = gpsUtil.getAttractions();
+		List<Attraction> allAttractions = apiRequestService.getAttractions();
 		Collections.sort(allAttractions, new AttractionComparator(visitedLocation.location));
 		List<AttractionDTO> firstFiveNearbyAttractions = new ArrayList<>();
 
