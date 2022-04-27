@@ -16,7 +16,7 @@ public class ApiRequestServiceImpl implements ApiRequestService {
 
 	@Override
 	public List<Attraction> getAttractions() {
-		ResponseEntity<ArrayList> forEntity = restTemplate.getForEntity("http://localhost:3630/getAttractions",
+		ResponseEntity<ArrayList> forEntity = restTemplate.getForEntity("http://localhost:8081/getAttraction",
 				ArrayList.class);
 		List<Attraction> res = new ArrayList<>(forEntity.getBody());
 		return res;
