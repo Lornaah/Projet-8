@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
+import gpsUtil.location.VisitedLocation;
 
 @Configuration
 public class JacksonConfiguration {
@@ -19,6 +21,8 @@ public class JacksonConfiguration {
 		ObjectMapper mapper = new ObjectMapper();
 		SimpleModule module = new SimpleModule();
 		module.addDeserializer(Attraction.class, new AttractionDeserializer());
+		module.addDeserializer(VisitedLocation.class, new VisitedLocationDeserializer());
+		module.addDeserializer(Location.class, new LocationDeserializer());
 		mapper.registerModule(module);
 		return mapper;
 	}

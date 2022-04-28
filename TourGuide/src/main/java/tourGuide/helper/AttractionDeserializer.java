@@ -19,9 +19,7 @@ public class AttractionDeserializer extends JsonDeserializer<Attraction> {
 	@Override
 	public Attraction deserialize(JsonParser parser, DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {
-
 		ObjectMapper mapper = new ObjectMapper();
-
 		TreeNode tree = parser.getCodec().readTree(parser);
 
 		String attractionName = mapper.convertValue(tree.get("attractionName"), String.class);
