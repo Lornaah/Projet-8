@@ -24,9 +24,11 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.LocationDTO;
+import tourGuide.DTO.PriceDTO;
 import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.api.ApiRequestService;
+import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
 import tripPricer.Provider;
@@ -81,9 +83,12 @@ public class TourGuideServiceImpl implements TourGuideService {
 
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),
+
+		PriceDTO priceDTO = new PriceDTO(tripPricerApiKey, user.getUserId(),
 				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
 				user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
+
+		List<Provider> providers = apiRequestService.getPrice(priceDTO);
 		user.setTripDeals(providers);
 		return providers;
 	}

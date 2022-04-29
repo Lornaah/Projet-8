@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import tourGuide.DTO.PriceDTO;
+import tripPricer.Provider;
 
 @Service
 public class ApiRequestServiceImpl implements ApiRequestService {
@@ -56,6 +58,42 @@ public class ApiRequestServiceImpl implements ApiRequestService {
 				request, Object.class);
 
 		return mapper.convertValue(responseEntity.getBody(), VisitedLocation.class);
+	}
+
+	@Override
+	public int getAttractionRewardPoints(UUID attractionId, UUID userId) {
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		map.add("attractionId", attractionId);
+		map.add("userId", userId);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);
+
+		ResponseEntity<Object> responseEntity = restTemplate
+				.postForEntity("http://localhost:8081/getAttractionRewardPoints", request, Object.class);
+
+		return mapper.convertValue(responseEntity.getBody(), Integer.class);
+	}
+
+	@Override
+	public List<Provider> getPrice(PriceDTO priceDTO) {
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		map.add("priceDTO", priceDTO);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);
+
+		ResponseEntity<Object[]> responseEntity = restTemplate.postForEntity("http://localhost:8081/getPrice", request,
+				Object[].class);
+
+		Object[] objects = responseEntity.getBody();
+
+		List<Provider> providerList = Arrays.stream(objects).map(o -> mapper.convertValue(o, Provider.class))
+				.collect(Collectors.toList());
+
+		return providerList;
 	}
 
 }

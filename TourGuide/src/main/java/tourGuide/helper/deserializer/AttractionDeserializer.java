@@ -1,4 +1,4 @@
-package tourGuide.helper;
+package tourGuide.helper.deserializer;
 
 import java.io.IOException;
 
@@ -24,8 +24,8 @@ public class AttractionDeserializer extends JsonDeserializer<Attraction> {
 
 		String attractionName = mapper.convertValue(tree.get("attractionName"), String.class);
 		String city = mapper.convertValue(tree.get("city"), String.class);
-		double latitude = mapper.convertValue(tree.get("latitude"), double.class);
-		double longitude = mapper.convertValue(tree.get("longitude"), double.class);
+		double latitude = mapper.convertValue(tree.get("latitude"), Double.class);
+		double longitude = mapper.convertValue(tree.get("longitude"), Double.class);
 		String state = mapper.convertValue(tree.get("state"), String.class);
 
 		Attraction attraction = new Attraction(attractionName, city, state, latitude, longitude);

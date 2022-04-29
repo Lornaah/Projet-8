@@ -16,8 +16,8 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
+import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
 
 public class TestPerformance {

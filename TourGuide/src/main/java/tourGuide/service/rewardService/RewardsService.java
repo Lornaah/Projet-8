@@ -1,4 +1,4 @@
-package tourGuide.service;
+package tourGuide.service.rewardService;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;

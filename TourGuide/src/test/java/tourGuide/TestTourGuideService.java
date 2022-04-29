@@ -16,8 +16,8 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
+import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
 import tripPricer.Provider;
 

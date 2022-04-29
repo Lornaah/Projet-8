@@ -1,15 +1,14 @@
-package tourGuide.service;
+package tourGuide.service.rewardService;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import rewardCentral.RewardCentral;
+import tourGuide.service.api.ApiRequestService;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
@@ -21,10 +20,12 @@ public class RewardsServiceImpl implements RewardsService {
 	private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
+
 	@Autowired
-	private GpsUtil gpsUtil;
-	@Autowired
-	private RewardCentral rewardsCentral;
+	private ApiRequestService apiRequestService;
+
+//	@Autowired
+//	private RewardCentral rewardsCentral;
 
 	public RewardsServiceImpl() {
 	}
@@ -39,7 +40,7 @@ public class RewardsServiceImpl implements RewardsService {
 
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtil.getAttractions();
+		List<Attraction> attractions = apiRequestService.getAttractions();
 
 		for (VisitedLocation visitedLocation : userLocations) {
 			for (Attraction attraction : attractions) {
@@ -63,7 +64,7 @@ public class RewardsServiceImpl implements RewardsService {
 	}
 
 	public int getRewardPoints(Attraction attraction, User user) {
-		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+		return apiRequestService.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 
 	public double getDistance(Location loc1, Location loc2) {

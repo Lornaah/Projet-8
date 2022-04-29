@@ -1,4 +1,4 @@
-package tourGuide.helper;
+package tourGuide.helper.deserializer;
 
 import java.io.IOException;
 
