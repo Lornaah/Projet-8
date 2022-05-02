@@ -42,7 +42,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-
+test {
+    useJUnitPlatform()
+}
 jacoco {
     toolVersion = "0.8.4"
 }
@@ -54,7 +56,7 @@ jacocoTestReport {
         html.destination file("${buildDir}/jacocoHtml")
     }
 }
-
+ 
 test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 

@@ -1,18 +1,17 @@
 package tourGuide;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.helper.InternalTestHelper;
@@ -25,16 +24,13 @@ import tripPricer.Provider;
 public class TestTourGuideService {
 
 	@Autowired
-	GpsUtil gpsUtil;
-
-	@Autowired
 	RewardsService rewardsService;
 
 	@Autowired
 	TourGuideService tourGuideService;
 
-	@BeforeClass
-	public static void beforeEach() {
+	@BeforeEach
+	public void beforeEach() {
 		Locale.setDefault(Locale.US);
 	}
 
@@ -45,14 +41,13 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
+		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 
 		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 	}
 
 	@Test
 	public void addUser() {
-		GpsUtil gpsUtil = new GpsUtil();
 		InternalTestHelper.setInternalUserNumber(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
@@ -70,11 +65,10 @@ public class TestTourGuideService {
 
 	@Test
 	public void getAllUsers() {
-		GpsUtil gpsUtil = new GpsUtil();
 		InternalTestHelper.setInternalUserNumber(0);
 
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "jonnhy", "000", "jon@tourGuide.com");
+		User user2 = new User(UUID.randomUUID(), "jonnhy2", "000", "jon2@tourGuide.com");
 
 		tourGuideService.addUser(user);
 		tourGuideService.addUser(user2);
@@ -87,7 +81,6 @@ public class TestTourGuideService {
 
 	@Test
 	public void trackUser() {
-		GpsUtil gpsUtil = new GpsUtil();
 		InternalTestHelper.setInternalUserNumber(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
@@ -98,7 +91,6 @@ public class TestTourGuideService {
 
 	@Test
 	public void getNearbyAttractions() {
-		GpsUtil gpsUtil = new GpsUtil();
 		InternalTestHelper.setInternalUserNumber(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
