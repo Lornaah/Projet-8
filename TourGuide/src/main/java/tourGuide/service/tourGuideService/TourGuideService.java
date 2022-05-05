@@ -2,9 +2,9 @@ package tourGuide.service.tourGuideService;
 
 import java.util.List;
 
+import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.VisitedLocationDTO;
-import tourGuide.model.VisitedLocation;
 import tourGuide.user.User;
 import tripPricer.Provider;
 

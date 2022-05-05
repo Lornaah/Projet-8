@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jsoniter.output.JsonStream;
 
-import tourGuide.model.VisitedLocation;
+import gpsUtil.location.VisitedLocation;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 import tripPricer.Provider;
@@ -29,7 +29,7 @@ public class TourGuideController {
 	@PostMapping("/getLocation")
 	public String getLocation(@RequestParam String userName) {
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.getLocation());
+		return JsonStream.serialize(visitedLocation.location);
 	}
 
 	@PostMapping("/getNearByAttractions")

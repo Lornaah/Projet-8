@@ -2,8 +2,8 @@ package tourGuide.DTO;
 
 import java.util.Objects;
 
-import tourGuide.model.Attraction;
-import tourGuide.model.VisitedLocation;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.VisitedLocation;
 
 public class AttractionDTO {
 
@@ -17,11 +17,11 @@ public class AttractionDTO {
 
 	public AttractionDTO(Attraction currentAttraction, int rewardPoints, VisitedLocation visitedLocation,
 			double distance) {
-		this.name = currentAttraction.getAttractionName();
-		this.attractionLatitude = currentAttraction.getLatitude();
-		this.attractionLongitude = currentAttraction.getLongitude();
-		this.userLatitude = visitedLocation.getLocation().getLatitude();
-		this.userLongitude = visitedLocation.getLocation().getLongitude();
+		this.name = currentAttraction.attractionName;
+		this.attractionLatitude = currentAttraction.latitude;
+		this.attractionLongitude = currentAttraction.longitude;
+		this.userLatitude = visitedLocation.location.latitude;
+		this.userLongitude = visitedLocation.location.longitude;
 		this.distanceBetweenUser = distance;
 		this.rewardPoints = rewardPoints;
 	}

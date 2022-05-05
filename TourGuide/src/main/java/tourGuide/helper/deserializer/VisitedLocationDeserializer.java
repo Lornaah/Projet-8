@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import tourGuide.model.Location;
-import tourGuide.model.VisitedLocation;
+import gpsUtil.location.Location;
+import gpsUtil.location.VisitedLocation;
 
 @JsonComponent
 public class VisitedLocationDeserializer extends JsonDeserializer<VisitedLocation> {

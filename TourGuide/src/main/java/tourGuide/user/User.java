@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import tourGuide.model.VisitedLocation;
+import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
 public class User {
@@ -76,8 +76,8 @@ public class User {
 	}
 
 	public void addUserReward(UserReward userReward) {
-		if (userRewards.stream().noneMatch(
-				r -> r.getAttraction().getAttractionName().equals(userReward.getAttraction().getAttractionName()))) {
+		if (userRewards.stream()
+				.noneMatch(r -> r.getAttraction().attractionName.equals(userReward.getAttraction().attractionName))) {
 			userRewards.add(userReward);
 		}
 	}

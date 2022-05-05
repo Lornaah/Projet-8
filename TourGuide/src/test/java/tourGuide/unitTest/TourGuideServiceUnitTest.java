@@ -20,18 +20,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
+import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
-import tourGuide.DTO.PriceDTO;
 import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.model.Attraction;
-import tourGuide.model.Location;
-import tourGuide.model.VisitedLocation;
-import tourGuide.service.api.ApiRequestService;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 import tripPricer.Provider;
+import tripPricer.TripPricer;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +41,10 @@ public class TourGuideServiceUnitTest {
 	TourGuideService tourGuideService;
 
 	@MockBean
-	ApiRequestService apiRequestService;
+	GpsUtil gpsUtil;
+
+	@MockBean
+	TripPricer tripPricer;
 
 	@MockBean
 	RewardsService rewardsService;
@@ -58,13 +61,12 @@ public class TourGuideServiceUnitTest {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
-		VisitedLocation visitedLocationMock = new VisitedLocation();
-		visitedLocationMock.setId(user.getUserId());
-		Mockito.when(apiRequestService.getUserLocation(user.getUserId())).thenReturn(visitedLocationMock);
+		VisitedLocation visitedLocationMock = new VisitedLocation(user.getUserId(), null, null);
+		Mockito.when(gpsUtil.getUserLocation(user.getUserId())).thenReturn(visitedLocationMock);
 
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 
-		assertTrue(visitedLocation.getId().equals(user.getUserId()));
+		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 	}
 
 	@Test
@@ -124,13 +126,12 @@ public class TourGuideServiceUnitTest {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
-		VisitedLocation visitedLocationMock = new VisitedLocation();
-		visitedLocationMock.setId(user.getUserId());
-		Mockito.when(apiRequestService.getUserLocation(user.getUserId())).thenReturn(visitedLocationMock);
+		VisitedLocation visitedLocationMock = new VisitedLocation(user.getUserId(), null, null);
+		Mockito.when(gpsUtil.getUserLocation(user.getUserId())).thenReturn(visitedLocationMock);
 
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
 
-		assertTrue(visitedLocation.getId().equals(user.getUserId()));
+		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 	}
 
 	@Test
@@ -142,7 +143,7 @@ public class TourGuideServiceUnitTest {
 		for (int i = 0; i < 5; i++)
 			attractions.add(att);
 
-		Mockito.when(apiRequestService.getAttractions()).thenReturn(attractions);
+		Mockito.when(gpsUtil.getAttractions()).thenReturn(attractions);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = new VisitedLocation(UUID.randomUUID(), new Location(10, 10), new Date());
@@ -164,13 +165,13 @@ public class TourGuideServiceUnitTest {
 		InternalTestHelper.setInternalUserNumber(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		PriceDTO priceDTO = Mockito.mock(PriceDTO.class);
 		List<Provider> providerList = new ArrayList<>();
 
 		Provider provider = new Provider(UUID.randomUUID(), "name", 10d);
 		providerList.add(provider);
 
-		Mockito.when(apiRequestService.getPrice(any(PriceDTO.class))).thenReturn(providerList);
+		Mockito.when(tripPricer.getPrice(any(String.class), any(UUID.class), any(Integer.class), any(Integer.class),
+				any(Integer.class), any(Integer.class))).thenReturn(providerList);
 
 		List<Provider> providers = tourGuideService.getTripDeals(user);
 

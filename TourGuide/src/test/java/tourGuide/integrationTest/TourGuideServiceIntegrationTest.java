@@ -13,10 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.model.VisitedLocation;
-import tourGuide.service.api.ApiRequestService;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
@@ -30,9 +29,6 @@ public class TourGuideServiceIntegrationTest {
 
 	@Autowired
 	TourGuideService tourGuideService;
-
-	@Autowired
-	ApiRequestService apiRequestService;
 
 	@BeforeEach
 	public void beforeEach() {
@@ -48,7 +44,7 @@ public class TourGuideServiceIntegrationTest {
 
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 
-		assertTrue(visitedLocation.getId().equals(user.getUserId()));
+		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 	}
 
 	@Test
@@ -58,7 +54,7 @@ public class TourGuideServiceIntegrationTest {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
 
-		assertEquals(user.getUserId(), visitedLocation.getId());
+		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 
 	@Test

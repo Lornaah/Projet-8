@@ -1,7 +1,6 @@
 package tourGuide.helper.deserializer;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import org.springframework.boot.jackson.JsonComponent;
 
@@ -12,7 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import tourGuide.model.Attraction;
+import gpsUtil.location.Attraction;
 
 @JsonComponent
 public class AttractionDeserializer extends JsonDeserializer<Attraction> {
@@ -28,9 +27,8 @@ public class AttractionDeserializer extends JsonDeserializer<Attraction> {
 		double latitude = mapper.convertValue(tree.get("latitude"), Double.class);
 		double longitude = mapper.convertValue(tree.get("longitude"), Double.class);
 		String state = mapper.convertValue(tree.get("state"), String.class);
-		UUID id = mapper.convertValue(tree.get("attractionId"), UUID.class);
 
-		Attraction attraction = new Attraction(attractionName, city, state, latitude, longitude, id);
+		Attraction attraction = new Attraction(attractionName, city, state, latitude, longitude);
 
 		return attraction;
 	}

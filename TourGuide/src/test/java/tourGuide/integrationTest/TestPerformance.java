@@ -11,15 +11,18 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.model.Attraction;
-import tourGuide.model.VisitedLocation;
-import tourGuide.service.api.ApiRequestService;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 
 public class TestPerformance {
+
+	@Autowired
+	GpsUtil gpsUtil;
 
 	/*
 	 * A note on performance improvements:
@@ -49,9 +52,6 @@ public class TestPerformance {
 
 	@Autowired
 	TourGuideService tourGuideService;
-
-	@Autowired
-	ApiRequestService apiRequestService;
 
 	@Test
 	public void highVolumeTrackLocation() {
@@ -84,7 +84,7 @@ public class TestPerformance {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		Attraction attraction = apiRequestService.getAttractions().get(0);
+		Attraction attraction = gpsUtil.getAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
 		allUsers = tourGuideService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));

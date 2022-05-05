@@ -19,30 +19,36 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
+import gpsUtil.location.VisitedLocation;
+import rewardCentral.RewardCentral;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.LocationDTO;
-import tourGuide.DTO.PriceDTO;
 import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.model.Attraction;
-import tourGuide.model.Location;
-import tourGuide.model.VisitedLocation;
-import tourGuide.service.api.ApiRequestService;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
 import tripPricer.Provider;
+import tripPricer.TripPricer;
 
 @Service
 public class TourGuideServiceImpl implements TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideServiceImpl.class);
-
 	boolean testMode = true;
 
 	@Autowired
 	private RewardsService rewardsService;
 
 	@Autowired
-	private ApiRequestService apiRequestService;
+	TripPricer tripPricer;
+
+	@Autowired
+	GpsUtil gpsUtil;
+
+	@Autowired
+	RewardCentral rewardCentral;
 
 	public TourGuideServiceImpl() {
 		if (testMode) {
@@ -76,17 +82,16 @@ public class TourGuideServiceImpl implements TourGuideService {
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 
-		PriceDTO priceDTO = new PriceDTO(tripPricerApiKey, user.getUserId(),
+		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),
 				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
 				user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 
-		List<Provider> providers = apiRequestService.getPrice(priceDTO);
 		user.setTripDeals(providers);
 		return providers;
 	}
 
 	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = apiRequestService.getUserLocation(user.getUserId());
+		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
 		rewardsService.calculateRewards(user);
 		return visitedLocation;
@@ -94,21 +99,22 @@ public class TourGuideServiceImpl implements TourGuideService {
 
 	public List<AttractionDTO> getNearByAttractions(User user) {
 		VisitedLocation visitedLocation = getUserLocation(user);
-		List<Attraction> allAttractions = apiRequestService.getAttractions();
-		Collections.sort(allAttractions, new AttractionComparator(visitedLocation.getLocation()));
+		List<Attraction> allAttractions = gpsUtil.getAttractions();
+		Collections.sort(allAttractions, new AttractionComparator(visitedLocation.location));
 		List<AttractionDTO> firstFiveNearbyAttractions = new ArrayList<>();
 
 		for (int i = 0; i < 5; i++) {
 
 			Attraction currentAttraction = allAttractions.get(i);
 
-			double latitudeAttraction = currentAttraction.getLatitude();
-			double longitudeAttraction = currentAttraction.getLongitude();
+			double latitudeAttraction = currentAttraction.latitude;
+			double longitudeAttraction = currentAttraction.longitude;
 			double distance = rewardsService.getDistance(new Location(latitudeAttraction, longitudeAttraction),
-					visitedLocation.getLocation());
+					visitedLocation.location);
 
 			AttractionDTO attractionDTO = new AttractionDTO(currentAttraction,
 					rewardsService.getRewardPoints(currentAttraction, user), visitedLocation, distance);
+
 			firstFiveNearbyAttractions.add(attractionDTO);
 		}
 
@@ -191,8 +197,8 @@ public class TourGuideServiceImpl implements TourGuideService {
 		userList.forEach(u -> {
 			List<LocationDTO> list = new ArrayList<>();
 			for (int i = u.getVisitedLocations().size() - 1; i > 0; i--) {
-				list.add(new LocationDTO(u.getVisitedLocations().get(i).getLocation().getLatitude(),
-						u.getVisitedLocations().get(i).getLocation().getLongitude()));
+				list.add(new LocationDTO(u.getVisitedLocations().get(i).location.latitude,
+						u.getVisitedLocations().get(i).location.longitude));
 			}
 			VisitedLocationDTO visitedLocationDTO = new VisitedLocationDTO(u.getUserId().toString(), list);
 			visitedLocationList.add(visitedLocationDTO);
