@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gpsUtil.location.Location;
+import tourGuide.model.Location;
 
 public class LocationDeserializer extends JsonDeserializer<Location> {
 

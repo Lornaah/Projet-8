@@ -1,4 +1,4 @@
-package tourGuide.service;
+package tourGuide.service.tourGuideService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -19,27 +19,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.LocationDTO;
 import tourGuide.DTO.PriceDTO;
 import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.Attraction;
+import tourGuide.model.Location;
+import tourGuide.model.VisitedLocation;
 import tourGuide.service.api.ApiRequestService;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
-import tourGuide.user.UserReward;
 import tripPricer.Provider;
-import tripPricer.TripPricer;
 
 @Service
 public class TourGuideServiceImpl implements TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideServiceImpl.class);
 
-	@Autowired
-	private TripPricer tripPricer;
 	boolean testMode = true;
 
 	@Autowired
@@ -55,10 +51,6 @@ public class TourGuideServiceImpl implements TourGuideService {
 			initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
-	}
-
-	public List<UserReward> getUserRewards(User user) {
-		return user.getUserRewards();
 	}
 
 	public VisitedLocation getUserLocation(User user) {
@@ -103,17 +95,17 @@ public class TourGuideServiceImpl implements TourGuideService {
 	public List<AttractionDTO> getNearByAttractions(User user) {
 		VisitedLocation visitedLocation = getUserLocation(user);
 		List<Attraction> allAttractions = apiRequestService.getAttractions();
-		Collections.sort(allAttractions, new AttractionComparator(visitedLocation.location));
+		Collections.sort(allAttractions, new AttractionComparator(visitedLocation.getLocation()));
 		List<AttractionDTO> firstFiveNearbyAttractions = new ArrayList<>();
 
 		for (int i = 0; i < 5; i++) {
 
 			Attraction currentAttraction = allAttractions.get(i);
 
-			double latitudeAttraction = currentAttraction.latitude;
-			double longitudeAttraction = currentAttraction.longitude;
+			double latitudeAttraction = currentAttraction.getLatitude();
+			double longitudeAttraction = currentAttraction.getLongitude();
 			double distance = rewardsService.getDistance(new Location(latitudeAttraction, longitudeAttraction),
-					visitedLocation.location);
+					visitedLocation.getLocation());
 
 			AttractionDTO attractionDTO = new AttractionDTO(currentAttraction,
 					rewardsService.getRewardPoints(currentAttraction, user), visitedLocation, distance);
@@ -199,8 +191,8 @@ public class TourGuideServiceImpl implements TourGuideService {
 		userList.forEach(u -> {
 			List<LocationDTO> list = new ArrayList<>();
 			for (int i = u.getVisitedLocations().size() - 1; i > 0; i--) {
-				list.add(new LocationDTO(u.getVisitedLocations().get(i).location.latitude,
-						u.getVisitedLocations().get(i).location.longitude));
+				list.add(new LocationDTO(u.getVisitedLocations().get(i).getLocation().getLatitude(),
+						u.getVisitedLocations().get(i).getLocation().getLongitude()));
 			}
 			VisitedLocationDTO visitedLocationDTO = new VisitedLocationDTO(u.getUserId().toString(), list);
 			visitedLocationList.add(visitedLocationDTO);

@@ -1,7 +1,7 @@
 package tourGuide.service.rewardService;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
+import tourGuide.model.Attraction;
+import tourGuide.model.Location;
 import tourGuide.user.User;
 
 public interface RewardsService {

@@ -8,15 +8,15 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.PriceDTO;
 import tourGuide.helper.deserializer.AttractionDeserializer;
 import tourGuide.helper.deserializer.LocationDeserializer;
 import tourGuide.helper.deserializer.PriceDTODeserializer;
 import tourGuide.helper.deserializer.ProviderDeserializer;
 import tourGuide.helper.deserializer.VisitedLocationDeserializer;
+import tourGuide.model.Attraction;
+import tourGuide.model.Location;
+import tourGuide.model.VisitedLocation;
 import tripPricer.Provider;
 
 @Configuration

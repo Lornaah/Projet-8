@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
+import tourGuide.model.Attraction;
+import tourGuide.model.Location;
+import tourGuide.model.VisitedLocation;
 import tourGuide.service.api.ApiRequestService;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
@@ -23,9 +23,6 @@ public class RewardsServiceImpl implements RewardsService {
 
 	@Autowired
 	private ApiRequestService apiRequestService;
-
-//	@Autowired
-//	private RewardCentral rewardsCentral;
 
 	public RewardsServiceImpl() {
 	}
@@ -44,8 +41,8 @@ public class RewardsServiceImpl implements RewardsService {
 
 		for (VisitedLocation visitedLocation : userLocations) {
 			for (Attraction attraction : attractions) {
-				if (user.getUserRewards().stream()
-						.filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+				if (!user.getUserRewards().stream()
+						.anyMatch(r -> r.getAttraction().getAttractionName().equals(attraction.getAttractionName()))) {
 					if (nearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
@@ -60,18 +57,18 @@ public class RewardsServiceImpl implements RewardsService {
 	}
 
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
+		return getDistance(attraction, visitedLocation.getLocation()) > proximityBuffer ? false : true;
 	}
 
 	public int getRewardPoints(Attraction attraction, User user) {
-		return apiRequestService.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+		return apiRequestService.getAttractionRewardPoints(attraction.getAttractionId(), user.getUserId());
 	}
 
 	public double getDistance(Location loc1, Location loc2) {
-		double lat1 = Math.toRadians(loc1.latitude);
-		double lon1 = Math.toRadians(loc1.longitude);
-		double lat2 = Math.toRadians(loc2.latitude);
-		double lon2 = Math.toRadians(loc2.longitude);
+		double lat1 = Math.toRadians(loc1.getLatitude());
+		double lon1 = Math.toRadians(loc1.getLongitude());
+		double lat2 = Math.toRadians(loc2.getLatitude());
+		double lon2 = Math.toRadians(loc2.getLongitude());
 
 		double angle = Math
 				.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jsoniter.output.JsonStream;
 
-import gpsUtil.location.VisitedLocation;
-import tourGuide.service.TourGuideService;
+import tourGuide.model.VisitedLocation;
+import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 import tripPricer.Provider;
 
@@ -29,7 +29,7 @@ public class TourGuideController {
 	@PostMapping("/getLocation")
 	public String getLocation(@RequestParam String userName) {
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.location);
+		return JsonStream.serialize(visitedLocation.getLocation());
 	}
 
 	@PostMapping("/getNearByAttractions")
@@ -40,7 +40,7 @@ public class TourGuideController {
 
 	@PostMapping("/getRewards")
 	public String getRewards(@RequestParam String userName) {
-		return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
+		return JsonStream.serialize(getUser(userName).getUserRewards());
 	}
 
 	@PostMapping("/getAllCurrentLocations")
@@ -48,6 +48,9 @@ public class TourGuideController {
 		return JsonStream.serialize(tourGuideService.getAllCurrentLocations());
 	}
 
+// TODO : les utilisateurs se sont plaints du fait que leurs offres de voyage ne
+	// correspondaient pas exactement à leurs préférences, par exemple au niveau
+	// du nombre d’enfants ou de la durée du séjour
 	@PostMapping("/getTripDeals")
 	public String getTripDeals(@RequestParam String userName) {
 		List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));

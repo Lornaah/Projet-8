@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import tourGuide.service.TourGuideService;
+import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 
 public class Tracker extends Thread {

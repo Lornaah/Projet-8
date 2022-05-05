@@ -3,9 +3,9 @@ package tourGuide.service.api;
 import java.util.List;
 import java.util.UUID;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.PriceDTO;
+import tourGuide.model.Attraction;
+import tourGuide.model.VisitedLocation;
 import tripPricer.Provider;
 
 public interface ApiRequestService {

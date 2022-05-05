@@ -17,9 +17,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.PriceDTO;
+import tourGuide.model.Attraction;
+import tourGuide.model.VisitedLocation;
 import tripPricer.Provider;
 
 @Service
@@ -49,7 +49,7 @@ public class ApiRequestServiceImpl implements ApiRequestService {
 	@Override
 	public VisitedLocation getUserLocation(UUID uuid) {
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-		map.add("id", uuid);
+		map.add("attractionId", uuid);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);

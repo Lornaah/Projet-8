@@ -1,17 +1,14 @@
-package tourGuide.service;
+package tourGuide.service.tourGuideService;
 
 import java.util.List;
 
-import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.VisitedLocationDTO;
+import tourGuide.model.VisitedLocation;
 import tourGuide.user.User;
-import tourGuide.user.UserReward;
 import tripPricer.Provider;
 
 public interface TourGuideService {
-
-	List<UserReward> getUserRewards(User user);
 
 	VisitedLocation getUserLocation(User user);
 

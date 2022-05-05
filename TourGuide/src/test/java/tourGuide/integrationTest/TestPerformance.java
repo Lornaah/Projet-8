@@ -1,4 +1,4 @@
-package tourGuide;
+package tourGuide.integrationTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,16 +8,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.TourGuideService;
+import tourGuide.model.Attraction;
+import tourGuide.model.VisitedLocation;
+import tourGuide.service.api.ApiRequestService;
 import tourGuide.service.rewardService.RewardsService;
+import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 
 public class TestPerformance {
@@ -51,10 +50,11 @@ public class TestPerformance {
 	@Autowired
 	TourGuideService tourGuideService;
 
-	@Disabled
+	@Autowired
+	ApiRequestService apiRequestService;
+
 	@Test
 	public void highVolumeTrackLocation() {
-		GpsUtil gpsUtil = new GpsUtil();
 
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
@@ -75,10 +75,8 @@ public class TestPerformance {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled
 	@Test
 	public void highVolumeGetRewards() {
-		GpsUtil gpsUtil = new GpsUtil();
 
 		// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes
@@ -86,7 +84,7 @@ public class TestPerformance {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		Attraction attraction = gpsUtil.getAttractions().get(0);
+		Attraction attraction = apiRequestService.getAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
 		allUsers = tourGuideService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));

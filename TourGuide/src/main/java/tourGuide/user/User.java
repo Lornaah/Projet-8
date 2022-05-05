@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import gpsUtil.location.VisitedLocation;
+import tourGuide.model.VisitedLocation;
 import tripPricer.Provider;
 
 public class User {
@@ -25,6 +25,10 @@ public class User {
 		this.userName = userName;
 		this.phoneNumber = phoneNumber;
 		this.emailAddress = emailAddress;
+	}
+
+	public boolean hasEarnedReward(UserReward reward) {
+		return userRewards.stream().anyMatch(r -> r.equals(reward));
 	}
 
 	public UUID getUserId() {
@@ -72,7 +76,8 @@ public class User {
 	}
 
 	public void addUserReward(UserReward userReward) {
-		if (userRewards.stream().filter(r -> !r.attraction.attractionName.equals(userReward.attraction)).count() == 0) {
+		if (userRewards.stream().noneMatch(
+				r -> r.getAttraction().getAttractionName().equals(userReward.getAttraction().getAttractionName()))) {
 			userRewards.add(userReward);
 		}
 	}
