@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,6 +31,7 @@ import rewardCentral.RewardCentral;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.LocationDTO;
 import tourGuide.DTO.VisitedLocationDTO;
+import tourGuide.async.TrackUserLocationTask;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
@@ -97,6 +102,20 @@ public class TourGuideServiceImpl implements TourGuideService {
 		return visitedLocation;
 	}
 
+	@Override
+	public List<Future<VisitedLocation>> trackUserLocationAsync(List<User> userList) {
+		ExecutorService executor = Executors.newCachedThreadPool();
+		List<Callable<VisitedLocation>> callables = new ArrayList<>();
+		userList.forEach(u -> callables.add(new TrackUserLocationTask(u, this::trackUserLocation)));
+
+		try {
+			return executor.invokeAll(callables);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+	}
+
 	public List<AttractionDTO> getNearByAttractions(User user) {
 		VisitedLocation visitedLocation = getUserLocation(user);
 		List<Attraction> allAttractions = gpsUtil.getAttractions();
@@ -153,7 +172,14 @@ public class TourGuideServiceImpl implements TourGuideService {
 	// internal users are provided and stored in memory
 	private final Map<String, User> internalUserMap = new HashMap<>();
 
+	@Override
+	public void setInternalUsersNumberCount(int count) {
+		InternalTestHelper.setInternalUserNumber(count);
+		initializeInternalUsers();
+	}
+
 	private void initializeInternalUsers() {
+		internalUserMap.clear();
 		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
 			String userName = "internalUser" + i;
 			String phone = "000";

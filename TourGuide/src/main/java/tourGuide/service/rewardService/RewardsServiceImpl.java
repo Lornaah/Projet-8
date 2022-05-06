@@ -1,6 +1,11 @@
 package tourGuide.service.rewardService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +15,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
+import tourGuide.async.CalculateRewardsTask;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
@@ -54,6 +60,29 @@ public class RewardsServiceImpl implements RewardsService {
 					}
 				}
 			}
+		}
+	}
+
+	public List<Future<Void>> calculateRewardsAsync(List<User> userList) {
+		// Orchestrateur de threads : gère le nombre de threads à lancer, leur lancement
+		// etc.
+		ExecutorService executor = Executors.newCachedThreadPool();
+		// Callable : Interface de la classe CalculateRewardsTask
+		List<Callable<Void>> callables = new ArrayList<>();
+
+		// Pour chaque utilisateur, on crée une tâche exécutable en parallèle : chacune
+		// prend en paramètre l'utilisateur sur lequel effectuer le traitement + la
+		// fonction à appeler.
+		// Ce n'est pas systématique de passer une fonction en paramètre, ça nous
+		// arrange juste dans notre cas
+		userList.forEach(u -> callables.add(new CalculateRewardsTask(u, this::calculateRewards)));
+
+		// Attention ici : un seul thread en erreur => aucun utilisateur ne sera traité.
+		try {
+			return executor.invokeAll(callables);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return new ArrayList<>();
 		}
 	}
 
