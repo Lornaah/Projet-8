@@ -1,5 +1,8 @@
 package tourGuide;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +13,7 @@ import tripPricer.TripPricer;
 
 @Configuration
 public class TourGuideModule {
+	private ExecutorService executor = Executors.newCachedThreadPool();
 
 	@Bean
 	public RewardCentral getRewardCentral() {
@@ -29,6 +33,11 @@ public class TourGuideModule {
 	@Bean
 	Tracker getTracker() {
 		return new Tracker();
+	}
+
+	@Bean
+	public ExecutorService getExercutorService() {
+		return executor;
 	}
 
 }

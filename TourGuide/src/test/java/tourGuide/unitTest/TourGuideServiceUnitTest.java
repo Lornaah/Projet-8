@@ -151,7 +151,7 @@ public class TourGuideServiceUnitTest {
 		Mockito.when(rewardsService.getDistance(any(Location.class), any(Location.class))).thenReturn(10.00);
 		Mockito.when(rewardsService.getRewardPoints(any(Attraction.class), any(User.class))).thenReturn(100);
 
-		List<AttractionDTO> attractionDTOs = tourGuideService.getNearByAttractions(user);
+		List<AttractionDTO> attractionDTOs = tourGuideService.getNearbyAttractions(user);
 
 		assertFalse(attractionDTOs.isEmpty());
 		assertFalse(attractionDTOs == null);

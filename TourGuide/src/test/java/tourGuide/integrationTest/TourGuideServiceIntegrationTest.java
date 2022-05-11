@@ -74,7 +74,7 @@ public class TourGuideServiceIntegrationTest {
 	public void getNearbyAttraction() {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
-		List<AttractionDTO> attractionDTOs = tourGuideService.getNearByAttractions(user);
+		List<AttractionDTO> attractionDTOs = tourGuideService.getNearbyAttractions(user);
 
 		assertFalse(attractionDTOs == null);
 		assertFalse(attractionDTOs.isEmpty());

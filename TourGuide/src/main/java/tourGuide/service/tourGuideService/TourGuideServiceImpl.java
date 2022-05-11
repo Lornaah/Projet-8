@@ -11,9 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -31,7 +30,6 @@ import rewardCentral.RewardCentral;
 import tourGuide.DTO.AttractionDTO;
 import tourGuide.DTO.LocationDTO;
 import tourGuide.DTO.VisitedLocationDTO;
-import tourGuide.async.TrackUserLocationTask;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
@@ -44,7 +42,10 @@ public class TourGuideServiceImpl implements TourGuideService {
 	boolean testMode = true;
 
 	@Autowired
-	private RewardsService rewardsService;
+	ExecutorService executor;
+
+	@Autowired
+	RewardsService rewardsService;
 
 	@Autowired
 	TripPricer tripPricer;
@@ -103,20 +104,16 @@ public class TourGuideServiceImpl implements TourGuideService {
 	}
 
 	@Override
-	public List<Future<VisitedLocation>> trackUserLocationAsync(List<User> userList) {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		List<Callable<VisitedLocation>> callables = new ArrayList<>();
-		userList.forEach(u -> callables.add(new TrackUserLocationTask(u, this::trackUserLocation)));
+	public Future<VisitedLocation> trackUserLocationAsync(User user) {
+		CompletableFuture<VisitedLocation> result = new CompletableFuture<>();
 
-		try {
-			return executor.invokeAll(callables);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return new ArrayList<>();
-		}
+		// Create a task (trackUserLocation) and get the result on a CompletableFuture
+		executor.submit(() -> result.complete(trackUserLocation(user)));
+		return result;
+
 	}
 
-	public List<AttractionDTO> getNearByAttractions(User user) {
+	public List<AttractionDTO> getNearbyAttractions(User user) {
 		VisitedLocation visitedLocation = getUserLocation(user);
 		List<Attraction> allAttractions = gpsUtil.getAttractions();
 		Collections.sort(allAttractions, new AttractionComparator(visitedLocation.location));
@@ -148,7 +145,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 		}
 
 		@Override
-		// return -1 (décroissant) 0 ou 1 (croissant)
+		// return -1 descending 0 or ascending 1
 		public int compare(Attraction o1, Attraction o2) {
 			if (o1 == null)
 				return -1;

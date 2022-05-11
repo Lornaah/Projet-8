@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +56,7 @@ public class TestPerformance {
 	}
 
 	@Test
-	public void highVolumeTrackLocation() {
+	public void highVolumeTrackLocation() throws InterruptedException, ExecutionException {
 
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
@@ -66,17 +68,18 @@ public class TestPerformance {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		// Partie Asynchrone
+		// Asynchronus part
 		List<Future<VisitedLocation>> results = new ArrayList<>();
 
-		results = tourGuideService.trackUserLocationAsync(allUsers);
+		for (User user : allUsers) {
 
-		for (Future<VisitedLocation> future : results)
-			try {
-				future.get();
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-			}
+			results.add(tourGuideService.trackUserLocationAsync(user));
+		}
+
+		for (Future<VisitedLocation> future : results) {
+			future.get();
+
+		}
 
 		stopWatch.stop();
 
@@ -101,15 +104,17 @@ public class TestPerformance {
 
 		// Partie Asynchrone
 		List<Future<Void>> results = new ArrayList<>();
-
-		results = rewardsService.calculateRewardsAsync(allUsers);
-
-		for (Future<Void> future : results)
-			future.get();
+		ExecutorService executor = Executors.newCachedThreadPool();
 
 		for (User user : allUsers) {
-			assertTrue(user.getUserRewards().size() > 0);
+
+			results.add(rewardsService.calculateRewardsAsync(user, executor));
 		}
+
+		for (Future<Void> future : results) {
+			future.get();
+		}
+
 		stopWatch.stop();
 
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())

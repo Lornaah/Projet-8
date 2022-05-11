@@ -32,10 +32,10 @@ public class TourGuideController {
 		return JsonStream.serialize(visitedLocation.location);
 	}
 
-	@PostMapping("/getNearByAttractions")
+	@PostMapping("/getNearbyAttractions")
 	public String getNearbyAttractions(@RequestParam String userName) {
 		User user = getUser(userName);
-		return JsonStream.serialize(tourGuideService.getNearByAttractions(user));
+		return JsonStream.serialize(tourGuideService.getNearbyAttractions(user));
 	}
 
 	@PostMapping("/getRewards")
@@ -48,9 +48,6 @@ public class TourGuideController {
 		return JsonStream.serialize(tourGuideService.getAllCurrentLocations());
 	}
 
-// TODO : les utilisateurs se sont plaints du fait que leurs offres de voyage ne
-	// correspondaient pas exactement à leurs préférences, par exemple au niveau
-	// du nombre d’enfants ou de la durée du séjour
 	@PostMapping("/getTripDeals")
 	public String getTripDeals(@RequestParam String userName) {
 		List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));

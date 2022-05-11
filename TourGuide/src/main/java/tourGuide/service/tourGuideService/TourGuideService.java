@@ -23,12 +23,12 @@ public interface TourGuideService {
 
 	VisitedLocation trackUserLocation(User user);
 
-	List<AttractionDTO> getNearByAttractions(User user);
+	List<AttractionDTO> getNearbyAttractions(User user);
 
 	List<VisitedLocationDTO> getAllCurrentLocations();
 
 	void setInternalUsersNumberCount(int count);
 
-	List<Future<VisitedLocation>> trackUserLocationAsync(List<User> userList);
+	Future<VisitedLocation> trackUserLocationAsync(User user);
 
 }

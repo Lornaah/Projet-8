@@ -1,6 +1,6 @@
 package tourGuide.service.rewardService;
 
-import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import gpsUtil.location.Attraction;
@@ -21,6 +21,6 @@ public interface RewardsService {
 
 	double getDistance(Location loc1, Location loc2);
 
-	List<Future<Void>> calculateRewardsAsync(List<User> userList);
+	Future<Void> calculateRewardsAsync(User user, ExecutorService executorService);
 
 }
