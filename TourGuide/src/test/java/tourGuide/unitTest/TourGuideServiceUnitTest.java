@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,6 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
-import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
@@ -182,9 +182,9 @@ public class TourGuideServiceUnitTest {
 
 	@Test
 	public void getAllCurrentLocations() {
-		List<VisitedLocationDTO> visitedLocationDTOs = tourGuideService.getAllCurrentLocations();
+		Map<String, Location> map = tourGuideService.getAllCurrentLocations();
 
-		assertFalse(visitedLocationDTOs == null);
-		assertFalse(visitedLocationDTOs.isEmpty());
+		assertFalse(map == null);
+		assertFalse(map.isEmpty());
 	}
 }

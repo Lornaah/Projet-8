@@ -1,11 +1,12 @@
 package tourGuide.service.tourGuideService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
+import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
-import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.user.User;
 import tripPricer.Provider;
 
@@ -25,7 +26,7 @@ public interface TourGuideService {
 
 	List<AttractionDTO> getNearbyAttractions(User user);
 
-	List<VisitedLocationDTO> getAllCurrentLocations();
+	Map<String, Location> getAllCurrentLocations();
 
 	void setInternalUsersNumberCount(int count);
 

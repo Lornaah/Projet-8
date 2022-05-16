@@ -95,6 +95,9 @@ public class User {
 	}
 
 	public VisitedLocation getLastVisitedLocation() {
+		if (visitedLocations.isEmpty()) {
+			return null;
+		}
 		return visitedLocations.get(visitedLocations.size() - 1);
 	}
 

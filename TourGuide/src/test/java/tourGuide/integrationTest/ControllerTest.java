@@ -99,17 +99,4 @@ public class ControllerTest {
 			assertFalse(n.get("tripId") == null);
 		});
 	}
-
-	@Test
-	public void testGetUser() throws Exception {
-		MvcResult result = mockMvc.perform(
-				post("/getUser").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("userName", "internalUser3"))
-				.andExpect(status().isOk()).andReturn();
-		String response = result.getResponse().getContentAsString();
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = mapper.readTree(response);
-		assertFalse(json.get("userId") == null);
-		assertFalse(json.get("userName") == null);
-		assertFalse(json.get("phoneNumber") == null);
-	}
 }

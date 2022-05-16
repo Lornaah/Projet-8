@@ -28,8 +28,6 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.DTO.AttractionDTO;
-import tourGuide.DTO.LocationDTO;
-import tourGuide.DTO.VisitedLocationDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
@@ -137,6 +135,22 @@ public class TourGuideServiceImpl implements TourGuideService {
 		return firstFiveNearbyAttractions;
 	}
 
+	public Map<String, Location> getAllCurrentLocations() {
+		Map<String, Location> map = new HashMap<>();
+		List<User> userList = getAllUsers();
+
+		userList.forEach(u -> {
+			if (u.getLastVisitedLocation() == null) {
+				logger.error(u.getUserName() + " doesn't have a Location");
+
+			} else {
+				VisitedLocation visitedLocation = u.getLastVisitedLocation();
+				map.put(u.getUserId().toString(), visitedLocation.location);
+			}
+		});
+		return map;
+	}
+
 	private class AttractionComparator implements Comparator<Attraction> {
 		private Location userLocation;
 
@@ -211,23 +225,6 @@ public class TourGuideServiceImpl implements TourGuideService {
 	private Date getRandomTime() {
 		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
 		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
-	}
-
-	public List<VisitedLocationDTO> getAllCurrentLocations() {
-		List<VisitedLocationDTO> visitedLocationList = new ArrayList<>();
-		List<User> userList = getAllUsers();
-
-		userList.forEach(u -> {
-			List<LocationDTO> list = new ArrayList<>();
-			for (int i = u.getVisitedLocations().size() - 1; i > 0; i--) {
-				list.add(new LocationDTO(u.getVisitedLocations().get(i).location.latitude,
-						u.getVisitedLocations().get(i).location.longitude));
-			}
-			VisitedLocationDTO visitedLocationDTO = new VisitedLocationDTO(u.getUserId().toString(), list);
-			visitedLocationList.add(visitedLocationDTO);
-		});
-
-		return visitedLocationList;
 	}
 
 }
