@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
-import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
@@ -42,7 +41,7 @@ public class TestRewardsService {
 	@Test
 	public void userGetRewards() {
 
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(1);
 		rewardsService.setProximityBuffer(10);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
@@ -63,7 +62,7 @@ public class TestRewardsService {
 	public void nearAllAttractions() {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
-		InternalTestHelper.setInternalUserNumber(1);
+		tourGuideService.setInternalUsersNumberCount(1);
 
 		User user = tourGuideService.getAllUsers().get(0);
 		rewardsService.calculateRewards(user);

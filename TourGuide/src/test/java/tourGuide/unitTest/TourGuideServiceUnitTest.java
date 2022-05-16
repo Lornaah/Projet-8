@@ -26,7 +26,6 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
-import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
@@ -57,7 +56,7 @@ public class TourGuideServiceUnitTest {
 	@Test
 	public void getUserLocation_WhenGetVisitedLocationSizeIsEmpty() {
 
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
@@ -72,7 +71,7 @@ public class TourGuideServiceUnitTest {
 	@Test
 	public void getUserLocation_WhenGetVisitedLocationSizeIsNotEmpty() {
 
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		// Mock 2 functions, one deeper the first one ex :
 		// user.getVisitedLocations().size()
@@ -89,7 +88,7 @@ public class TourGuideServiceUnitTest {
 
 	@Test
 	public void addUser() {
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -106,7 +105,7 @@ public class TourGuideServiceUnitTest {
 
 	@Test
 	public void getAllUsers() {
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jonnhy", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jonnhy2", "000", "jon2@tourGuide.com");
@@ -122,7 +121,7 @@ public class TourGuideServiceUnitTest {
 
 	@Test
 	public void trackUser() {
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
@@ -136,7 +135,7 @@ public class TourGuideServiceUnitTest {
 
 	@Test
 	public void getNearbyAttractions() {
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 		List<Attraction> attractions = new ArrayList<>();
 
 		Attraction att = Mockito.mock(Attraction.class);
@@ -162,7 +161,7 @@ public class TourGuideServiceUnitTest {
 	@Test
 	public void getTripDeals() {
 
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		List<Provider> providerList = new ArrayList<>();
@@ -182,6 +181,8 @@ public class TourGuideServiceUnitTest {
 
 	@Test
 	public void getAllCurrentLocations() {
+		tourGuideService.setInternalUsersNumberCount(20);
+
 		Map<String, Location> map = tourGuideService.getAllCurrentLocations();
 
 		assertFalse(map == null);

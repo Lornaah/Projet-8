@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
-import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
@@ -38,7 +37,7 @@ public class TourGuideServiceIntegrationTest {
 	@Test
 	public void getUserLocation() {
 
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
@@ -49,7 +48,7 @@ public class TourGuideServiceIntegrationTest {
 
 	@Test
 	public void trackUser() {
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
@@ -60,7 +59,7 @@ public class TourGuideServiceIntegrationTest {
 	@Test
 	public void getTripDeals() {
 
-		InternalTestHelper.setInternalUserNumber(0);
+		tourGuideService.setInternalUsersNumberCount(0);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 

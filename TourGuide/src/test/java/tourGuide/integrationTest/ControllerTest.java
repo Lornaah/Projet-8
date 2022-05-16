@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tourGuide.service.rewardService.RewardsService;
+import tourGuide.service.tourGuideService.TourGuideService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,6 +26,9 @@ public class ControllerTest {
 
 	@Autowired
 	private RewardsService rewardsService;
+
+	@Autowired
+	private TourGuideService tourGuideService;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -36,6 +40,7 @@ public class ControllerTest {
 
 	@Test
 	public void testGetLocation() throws Exception {
+		tourGuideService.setInternalUsersNumberCount(20);
 
 		MvcResult result = mockMvc.perform(post("/getLocation").contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("userName", "internalUser3")).andExpect(status().isOk()).andReturn();
@@ -51,6 +56,8 @@ public class ControllerTest {
 
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
+		tourGuideService.setInternalUsersNumberCount(20);
+
 		MvcResult result = mockMvc.perform(post("/getNearbyAttractions")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED).param("userName", "internalUser3"))
 				.andExpect(status().isOk()).andReturn();
@@ -68,6 +75,8 @@ public class ControllerTest {
 
 	@Test
 	public void testGetRewards() throws Exception {
+		tourGuideService.setInternalUsersNumberCount(20);
+
 		rewardsService.setProximityBuffer(100000);
 		mockMvc.perform(post("/getRewards").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("userName",
 				"internalUser3")).andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
@@ -75,6 +84,8 @@ public class ControllerTest {
 
 	@Test
 	public void testGetAllCurrentLocations() throws Exception {
+		tourGuideService.setInternalUsersNumberCount(20);
+
 		MvcResult result = mockMvc.perform(post("/getAllCurrentLocations")).andExpect(status().isOk())
 				.andExpect(jsonPath("$").exists()).andExpect(jsonPath("$").isMap()).andReturn();
 
@@ -93,6 +104,8 @@ public class ControllerTest {
 
 	@Test
 	public void testGetTripDeals() throws Exception {
+		tourGuideService.setInternalUsersNumberCount(20);
+
 		MvcResult result = mockMvc.perform(post("/getTripDeals").contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("userName", "internalUser3")).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andReturn();
