@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
+import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
@@ -23,6 +26,12 @@ public class TourGuideController {
 
 	@Autowired
 	TourGuideService tourGuideService;
+
+	@Autowired
+	RewardsService rewardsService;
+
+	@Autowired
+	ObjectMapper mapper;
 
 	@RequestMapping("/")
 	public String index() {
@@ -50,12 +59,13 @@ public class TourGuideController {
 	}
 
 	@PostMapping("/getRewards")
-	public String getRewards(@RequestParam String userName) {
+	public String getRewards(@RequestParam String userName) throws JsonProcessingException {
+		rewardsService.calculateRewards(getUser(userName));
 		List<UserReward> rewardsList = getUser(userName).getUserRewards();
 		if (rewardsList.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The user " + userName + " doesn't have rewards");
 		}
-		return JsonStream.serialize(getUser(userName).getUserRewards());
+		return mapper.writeValueAsString(getUser(userName).getUserRewards());
 	}
 
 	@PostMapping("/getAllCurrentLocations")

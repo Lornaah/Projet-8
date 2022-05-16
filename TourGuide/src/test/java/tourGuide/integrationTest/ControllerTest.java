@@ -1,6 +1,7 @@
 package tourGuide.integrationTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,9 +17,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import tourGuide.service.rewardService.RewardsService;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ControllerTest {
+
+	@Autowired
+	private RewardsService rewardsService;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -62,6 +68,7 @@ public class ControllerTest {
 
 	@Test
 	public void testGetRewards() throws Exception {
+		rewardsService.setProximityBuffer(100000);
 		mockMvc.perform(post("/getRewards").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("userName",
 				"internalUser3")).andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
 	}
@@ -69,19 +76,18 @@ public class ControllerTest {
 	@Test
 	public void testGetAllCurrentLocations() throws Exception {
 		MvcResult result = mockMvc.perform(post("/getAllCurrentLocations")).andExpect(status().isOk())
-				.andExpect(jsonPath("$").exists()).andExpect(jsonPath("$").isArray()).andReturn();
+				.andExpect(jsonPath("$").exists()).andExpect(jsonPath("$").isMap()).andReturn();
 
 		String response = result.getResponse().getContentAsString();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode json = mapper.readTree(response);
 
+		assertFalse(json.isEmpty());
+
 		json.forEach(n -> {
-			assertFalse(n.get("location") == null);
-			assertFalse(n.get("userId") == null);
-			for (JsonNode visitedLocation : n.get("location")) {
-				assertFalse(visitedLocation.get("latitude") == null);
-				assertFalse(visitedLocation.get("longitude") == null);
-			}
+			assertTrue(n.get("longitude").isFloatingPointNumber());
+			assertTrue(n.get("latitude").isFloatingPointNumber());
+
 		});
 	}
 
