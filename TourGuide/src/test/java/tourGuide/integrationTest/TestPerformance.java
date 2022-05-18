@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,7 +55,6 @@ public class TestPerformance {
 		Locale.setDefault(Locale.US);
 	}
 
-	@Disabled
 	@Test
 	public void highVolumeTrackLocation() throws InterruptedException, ExecutionException {
 
@@ -90,7 +88,6 @@ public class TestPerformance {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled
 	@Test
 	public void highVolumeGetRewards() throws InterruptedException, ExecutionException {
 
