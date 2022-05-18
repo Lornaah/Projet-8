@@ -13,7 +13,7 @@ import tripPricer.TripPricer;
 
 @Configuration
 public class TourGuideModule {
-	private ExecutorService executor = Executors.newCachedThreadPool();
+	private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 	@Bean
 	public RewardCentral getRewardCentral() {
