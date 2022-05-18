@@ -12,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.service.rewardService.RewardsService;
@@ -42,7 +41,7 @@ public class TourGuideController {
 	public String getLocation(@RequestParam String userName) {
 		try {
 			VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-			return JsonStream.serialize(visitedLocation.location);
+			return mapper.writeValueAsString(visitedLocation.location);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found" + e.getMessage());
 		}
@@ -52,7 +51,7 @@ public class TourGuideController {
 	public String getNearbyAttractions(@RequestParam String userName) {
 		try {
 			User user = getUser(userName);
-			return JsonStream.serialize(tourGuideService.getNearbyAttractions(user));
+			return mapper.writeValueAsString(tourGuideService.getNearbyAttractions(user));
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nearby Attractions not found" + e.getMessage());
 		}
@@ -71,7 +70,7 @@ public class TourGuideController {
 	@PostMapping("/getAllCurrentLocations")
 	public String getAllCurrentLocations() {
 		try {
-			return JsonStream.serialize(tourGuideService.getAllCurrentLocations());
+			return mapper.writeValueAsString(tourGuideService.getAllCurrentLocations());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "All current locations not found" + e.getMessage());
@@ -82,7 +81,7 @@ public class TourGuideController {
 	public String getTripDeals(@RequestParam String userName) {
 		try {
 			List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
-			return JsonStream.serialize(providers);
+			return mapper.writeValueAsString(providers);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trip Deals not found " + e.getMessage());
 		}

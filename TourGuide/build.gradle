@@ -62,6 +62,16 @@ jacocoTestReport {
         csv.enabled = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
      }
+     afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+            'tourGuide/DTO/**',
+			'tourGuide/Application',
+			'tourGuide/user/**',
+			'tourGuide/tracker/**'
+            ])
+        }))
+    }
 }
  
 jacocoTestCoverageVerification {
