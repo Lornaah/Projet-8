@@ -20,10 +20,17 @@ build:
 
 test:
   stage: test
-  script: gradle check --info --scan
+  script: gradle check --info --scan --stacktrace
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
       - build
       - .gradle
+  artifacts:
+    when: always
+    paths:
+      - target/JUnitReport/
+    expire_in: 1 week
+    reports:
+      junit: /builds/Lornaah/**/index.html
