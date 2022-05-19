@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -104,11 +102,10 @@ public class TestPerformance {
 
 		// Partie Asynchrone
 		List<Future<Void>> results = new ArrayList<>();
-		ExecutorService executor = Executors.newCachedThreadPool();
 
 		for (User user : allUsers) {
 
-			results.add(rewardsService.calculateRewardsAsync(user, executor));
+			results.add(rewardsService.calculateRewardsAsync(user));
 		}
 
 		for (Future<Void> future : results) {

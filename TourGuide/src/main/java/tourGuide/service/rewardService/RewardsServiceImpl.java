@@ -25,6 +25,9 @@ public class RewardsServiceImpl implements RewardsService {
 	@Autowired
 	RewardCentral rewardCentral;
 
+	@Autowired
+	ExecutorService executor;
+
 	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
 	// proximity in miles
@@ -60,8 +63,16 @@ public class RewardsServiceImpl implements RewardsService {
 		}
 	}
 
-	public Future<Void> calculateRewardsAsync(User user, ExecutorService executor) {
-		return CompletableFuture.runAsync(() -> calculateRewards(user), executor);
+	public Future<Void> calculateRewardsAsync(User user) {
+		CompletableFuture<Void> result = new CompletableFuture<>();
+
+		// Create a task (calculateRewards) and get the result on a CompletableFuture
+		executor.submit(() -> {
+			calculateRewards(user);
+			result.complete(null);
+		});
+
+		return result;
 	}
 
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
