@@ -1,4 +1,4 @@
-package tourGuide;
+package tourGuide.controller;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gpsUtil.location.VisitedLocation;
+import tourGuide.DTO.ProviderDTO;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
-import tripPricer.Provider;
 
 @RestController
 public class TourGuideController {
@@ -80,7 +80,7 @@ public class TourGuideController {
 	@PostMapping("/getTripDeals")
 	public String getTripDeals(@RequestParam String userName) {
 		try {
-			List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
+			List<ProviderDTO> providers = tourGuideService.getTripDeals(getUser(userName));
 			return mapper.writeValueAsString(providers);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trip Deals not found " + e.getMessage());

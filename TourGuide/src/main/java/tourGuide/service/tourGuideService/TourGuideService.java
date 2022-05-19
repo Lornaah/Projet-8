@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
+import tourGuide.DTO.LocationDTO;
+import tourGuide.DTO.ProviderDTO;
 import tourGuide.user.User;
-import tripPricer.Provider;
 
 public interface TourGuideService {
 
@@ -20,13 +20,13 @@ public interface TourGuideService {
 
 	void addUser(User user);
 
-	List<Provider> getTripDeals(User user);
+	List<ProviderDTO> getTripDeals(User user);
 
 	VisitedLocation trackUserLocation(User user);
 
 	List<AttractionDTO> getNearbyAttractions(User user);
 
-	Map<String, Location> getAllCurrentLocations();
+	Map<String, LocationDTO> getAllCurrentLocations();
 
 	void setInternalUsersNumberCount(int count);
 

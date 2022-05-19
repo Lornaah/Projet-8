@@ -26,6 +26,8 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
+import tourGuide.DTO.LocationDTO;
+import tourGuide.DTO.ProviderDTO;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
@@ -172,7 +174,7 @@ public class TourGuideServiceUnitTest {
 		Mockito.when(tripPricer.getPrice(any(String.class), any(UUID.class), any(Integer.class), any(Integer.class),
 				any(Integer.class), any(Integer.class))).thenReturn(providerList);
 
-		List<Provider> providers = tourGuideService.getTripDeals(user);
+		List<ProviderDTO> providers = tourGuideService.getTripDeals(user);
 
 		assertFalse(providers.isEmpty());
 		assertFalse(providers == null);
@@ -183,7 +185,7 @@ public class TourGuideServiceUnitTest {
 	public void getAllCurrentLocations() {
 		tourGuideService.setInternalUsersNumberCount(20);
 
-		Map<String, Location> map = tourGuideService.getAllCurrentLocations();
+		Map<String, LocationDTO> map = tourGuideService.getAllCurrentLocations();
 
 		assertFalse(map == null);
 		assertFalse(map.isEmpty());

@@ -2,6 +2,8 @@ package tourGuide.DTO;
 
 import java.util.Objects;
 
+import gpsUtil.location.Location;
+
 public class LocationDTO {
 
 	private double latitude;
@@ -10,6 +12,11 @@ public class LocationDTO {
 	public LocationDTO(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+
+	public LocationDTO(Location location) {
+		this.latitude = location.latitude;
+		this.longitude = location.longitude;
 	}
 
 	public double getLatitude() {

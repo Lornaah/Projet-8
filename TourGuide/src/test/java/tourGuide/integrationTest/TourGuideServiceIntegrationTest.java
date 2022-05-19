@@ -15,10 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.DTO.AttractionDTO;
+import tourGuide.DTO.ProviderDTO;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.service.tourGuideService.TourGuideService;
 import tourGuide.user.User;
-import tripPricer.Provider;
 
 @SpringBootTest
 public class TourGuideServiceIntegrationTest {
@@ -63,7 +63,7 @@ public class TourGuideServiceIntegrationTest {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
-		List<Provider> providers = tourGuideService.getTripDeals(user);
+		List<ProviderDTO> providers = tourGuideService.getTripDeals(user);
 
 		assertFalse(providers.isEmpty());
 		assertFalse(providers == null);

@@ -28,6 +28,8 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.DTO.AttractionDTO;
+import tourGuide.DTO.LocationDTO;
+import tourGuide.DTO.ProviderDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.rewardService.RewardsService;
 import tourGuide.user.User;
@@ -83,7 +85,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 		}
 	}
 
-	public List<Provider> getTripDeals(User user) {
+	public List<ProviderDTO> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 
 		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),
@@ -91,7 +93,8 @@ public class TourGuideServiceImpl implements TourGuideService {
 				user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 
 		user.setTripDeals(providers);
-		return providers;
+
+		return providers.stream().map(p -> new ProviderDTO(p)).collect(Collectors.toList());
 	}
 
 	public VisitedLocation trackUserLocation(User user) {
@@ -135,8 +138,8 @@ public class TourGuideServiceImpl implements TourGuideService {
 		return firstFiveNearbyAttractions;
 	}
 
-	public Map<String, Location> getAllCurrentLocations() {
-		Map<String, Location> map = new HashMap<>();
+	public Map<String, LocationDTO> getAllCurrentLocations() {
+		Map<String, LocationDTO> map = new HashMap<>();
 		List<User> userList = getAllUsers();
 
 		userList.forEach(u -> {
@@ -145,7 +148,8 @@ public class TourGuideServiceImpl implements TourGuideService {
 
 			} else {
 				VisitedLocation visitedLocation = u.getLastVisitedLocation();
-				map.put(u.getUserId().toString(), visitedLocation.location);
+
+				map.put(u.getUserId().toString(), new LocationDTO(visitedLocation.location));
 			}
 		});
 		return map;
@@ -183,6 +187,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 	// internal users are provided and stored in memory
 	private final Map<String, User> internalUserMap = new HashMap<>();
 
+	// IoC from Spring : service is created once and for all
 	@Override
 	public void setInternalUsersNumberCount(int count) {
 		InternalTestHelper.setInternalUserNumber(count);
