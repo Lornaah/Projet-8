@@ -20,7 +20,9 @@ build:
 
 test:
   stage: test
-  script: gradle check --info --scan --stacktrace
+  script: 
+    - gradle --version
+    - gradle check --info --scan --stacktrace
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
