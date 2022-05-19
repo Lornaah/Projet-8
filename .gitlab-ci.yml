@@ -30,7 +30,7 @@ test:
   artifacts:
     when: always
     paths:
-      - target/JUnitReport/
+      - /builds/Lornaah/Projet-8/TourGuide/build/test-results/test
     expire_in: 1 week
     reports:
       junit: /builds/Lornaah/**/index.html
