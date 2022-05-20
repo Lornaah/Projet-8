@@ -70,7 +70,6 @@ public class TestPerformance {
 		List<Future<VisitedLocation>> results = new ArrayList<>();
 
 		for (User user : allUsers) {
-
 			results.add(tourGuideService.trackUserLocationAsync(user));
 		}
 
